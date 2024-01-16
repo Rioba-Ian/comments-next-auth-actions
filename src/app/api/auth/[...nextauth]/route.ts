@@ -7,7 +7,7 @@ import { Adapter } from "next-auth/adapters";
 import { env } from "@/lib/env";
 import { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
  adapter: PrismaAdapter(prisma) as Adapter,
  providers: [
   GithubProvider({
