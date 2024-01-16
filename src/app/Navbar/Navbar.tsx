@@ -12,7 +12,7 @@ export default async function Navbar() {
     <a className="btn btn-ghost text-xl">daisyUI</a>
    </div>
    <div className="flex-none">
-    <UserMenuButton />
+    <UserMenuButton session={session} />
    </div>
   </div>
  );

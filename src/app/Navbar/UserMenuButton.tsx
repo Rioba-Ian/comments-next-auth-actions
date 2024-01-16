@@ -1,4 +1,8 @@
+"use client";
 import { Session } from "next-auth";
+import Image from "next/image";
+import { signIn, signOut } from "next-auth/react";
+import profilePicPlaceholder from "../assets/profile-pic-placeholder.png";
 
 interface UserMenuButtonProps {
  session: Session | null;
@@ -10,30 +14,42 @@ export default function UserMenuButton({ session }: UserMenuButtonProps) {
  console.log(user);
 
  return (
-  <div className="dropdown dropdown-end">
-   <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-    <div className="w-10 rounded-full">
-     <img
-      alt="Tailwind CSS Navbar component"
-      src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+  <div className="dropdown-end dropdown">
+   <label tabIndex={0} className="btn-ghost btn-circle btn">
+    {user ? (
+     <Image
+      src={user?.image || profilePicPlaceholder}
+      alt="Profile picture"
+      width={40}
+      height={40}
+      className="w-10 rounded-full"
      />
-    </div>
-   </div>
+    ) : (
+     <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      className="inline-block h-5 w-5 stroke-current"
+     >
+      <path
+       strokeLinecap="round"
+       strokeLinejoin="round"
+       strokeWidth="2"
+       d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+      />
+     </svg>
+    )}
+   </label>
    <ul
     tabIndex={0}
-    className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+    className="dropdown-content menu rounded-box menu-sm z-30 mt-3 w-52 bg-base-100 p-2 shadow"
    >
     <li>
-     <a className="justify-between">
-      Profile
-      <span className="badge">New</span>
-     </a>
-    </li>
-    <li>
-     <a>Settings</a>
-    </li>
-    <li>
-     <a>Logout</a>
+     {user ? (
+      <button onClick={() => signOut({ callbackUrl: "/" })}>Sign Out</button>
+     ) : (
+      <button onClick={() => signIn()}>Sign In</button>
+     )}
     </li>
    </ul>
   </div>
