@@ -1,8 +1,9 @@
+import { authOptions } from "@/utils/authOptions";
 import UserMenuButton from "./UserMenuButton";
 import { getServerSession } from "next-auth";
 
 export default async function Navbar() {
- const session = await getServerSession();
+ const session = await getServerSession(authOptions);
 
  console.log(session);
 

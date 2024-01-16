@@ -12,22 +12,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-
-  image String?
-
-  comments Comment[]
-  replies  Reply[]
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  accounts  Account[]
-  sessions  Session[]
-}
-
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
@@ -56,6 +40,23 @@ model Reply {
   @@map("replies")
 }
 
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  image String?
+
+  emailVerified DateTime?
+
+  comments Comment[]
+  replies  Reply[]
+
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users")
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            Int
@@ -69,9 +70,11 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  User              User    @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
@@ -80,7 +83,9 @@ model Session {
   userId       Int
   expires      DateTime
 
-  User User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model VerificationToken {
@@ -89,4 +94,5 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verificationtokens")
 }
