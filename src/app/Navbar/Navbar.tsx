@@ -1,13 +1,16 @@
 import { authOptions } from "@/utils/authOptions";
 import UserMenuButton from "./UserMenuButton";
-import { getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
+import { getComments } from "../actions";
 
 export default async function Navbar() {
  const session = await getServerSession(authOptions);
 
- console.log(session);
+ const userData = await getComments(session);
+
+ console.log(userData, "userData");
 
  return (
   <div className="navbar bg-base-100">

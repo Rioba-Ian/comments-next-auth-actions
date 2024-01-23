@@ -1,21 +1,22 @@
-// import { prisma } from "@/lib/db/prisma";
-// import seedDatabase from "@/lib/seed";
+import { prisma } from "@/lib/db/prisma";
+import { Session } from "next-auth";
 
-// export async function handleLogin(req, res) {
-//  // check if user is new
-//  const user = await prisma.user.findUnique({
-//   where: {
-//    email: req.body.email,
-//   },
-//  });
+export async function getComments(session: Session | null) {
+ if (!session?.user?.email) return null;
 
-//  if (!user) {
-//   const newUser = await prisma.user.create({
-//    data: {
-//     email: req.body.email,
-//    },
-//   });
+ const comments = await prisma.comment.findMany({
+  include: {
+   replies: true,
+  },
+ });
 
-//   await seedDatabase(newUser.id);
-//  }
-// }
+ return comments;
+}
+
+export async function getUsers(session: Session | null) {
+ if (!session?.user?.email) return null;
+
+ const users = await prisma.user.findMany();
+
+ return users;
+}
