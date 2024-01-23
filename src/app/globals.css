@@ -8,9 +8,9 @@
 }
 
 #score-button {
- @apply text-moderate-blue py-2 px-4 rounded-2xl;
+ @apply text-moderate-blue py-2 px-2 rounded-xl;
 }
 
 #score-button > span {
- @apply text-light-grayish-blue cursor-pointer active:text-moderate-blue active:scale-150;
+ @apply text-light-grayish-blue cursor-pointer active:text-moderate-blue active:scale-150 hover:text-moderate-blue;
 }

@@ -13,6 +13,8 @@ export default async function Home() {
  console.log(session, "session");
 
  return (
-  <>{commentsData && <Comment comments={commentsData} users={userData} />}</>
+  <section className="max-w-2xl mx-auto">
+   {commentsData && <Comment comments={commentsData} users={userData} />}
+  </section>
  );
 }

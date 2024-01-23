@@ -17,17 +17,17 @@ export default function CommentBox(props: CommentBoxProps) {
  console.log(props.image, "props.users");
 
  return (
-  <div className="bg-white p-6 flex">
+  <div className="bg-white py-4 px-6 flex gap-6 rounded-xl">
    <div
     id="score-button"
-    className="bg-very-light-gray flex flex-col justify-center items-center text-lg space-y-2"
+    className="bg-very-light-gray flex flex-col justify-center items-center text-lg space-y-1"
    >
     <span>+</span>
-    <p>{props.score}</p>
+    <p className="font-medium">{props.score}</p>
     <span>-</span>
    </div>
-   <div id="content-wrapper" className="flex flex-col">
-    <div id="content" className="flex items-center">
+   <div id="content-wrapper" className="flex flex-col justify-between">
+    <div id="content" className="flex gap-3 items-center">
      <div id="profile">
       <Image
        src={props.image || PlaceHolderImage}
@@ -37,10 +37,10 @@ export default function CommentBox(props: CommentBoxProps) {
       />
      </div>
 
-     <p>{props.name}</p>
+     <p className="font-semibold">{props.name}</p>
     </div>
     <div>
-     <p>{props.content}</p>
+     <p className="text-grayish-blue mt-4">{props.content}</p>
     </div>
    </div>
   </div>

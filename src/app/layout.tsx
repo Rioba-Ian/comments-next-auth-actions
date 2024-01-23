@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "./SessionProvider";
 import Navbar from "./Navbar/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const rubik = Rubik({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
  title: "FEM + Rioba Ian",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
  return (
   <html lang="en">
-   <body className={`${inter.className} bg-very-light-gray`}>
+   <body className={`${rubik.className} bg-very-light-gray`}>
     <SessionProvider>
      <div
       id="body-wrapper"
