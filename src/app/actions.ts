@@ -16,7 +16,14 @@ export async function getComments(session: Session | null) {
 export async function getUsers(session: Session | null) {
  if (!session?.user?.email) return null;
 
- const users = await prisma.user.findMany();
+ const users = await prisma.user.findMany({
+  select: {
+   id: true,
+   email: true,
+   name: true,
+   image: true,
+  },
+ });
 
  return users;
 }

@@ -6,3 +6,11 @@
  width: min(80%, 1440px);
  margin: 0 auto;
 }
+
+#score-button {
+ @apply text-moderate-blue py-2 px-4 rounded-2xl;
+}
+
+#score-button > span {
+ @apply text-light-grayish-blue cursor-pointer active:text-moderate-blue active:scale-150;
+}
