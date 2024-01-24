@@ -1,5 +1,7 @@
+"use server";
 import { prisma } from "@/lib/db/prisma";
 import { Session } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export async function getComments(session: Session | null) {
  if (!session?.user?.email) return null;
@@ -28,10 +30,14 @@ export async function getUsers(session: Session | null) {
  return users;
 }
 
+type CommentOrReplyProps = {
+ commentId?: number;
+ replyId?: number;
+};
+
 export async function upVoteScore(
  session: Session | null,
- commentId?: number,
- replyId?: number
+ { commentId, replyId }: CommentOrReplyProps
 ) {
  if (!session?.user?.email) return null;
 
@@ -44,10 +50,15 @@ export async function upVoteScore(
     },
    },
   });
-  return comment;
- }
 
- if (replyId) {
+  console.log("comment", comment);
+  console.log("commentId", commentId);
+
+  if (comment) {
+   revalidatePath("/");
+  }
+  return comment;
+ } else if (replyId) {
   const reply = await prisma.reply.update({
    where: { id: replyId },
    data: {
@@ -56,19 +67,13 @@ export async function upVoteScore(
     },
    },
   });
+
+  console.log("reply", reply);
+  console.log("replyId", replyId);
+
+  if (reply) {
+   revalidatePath("/");
+  }
   return reply;
  }
 }
-
-/*
-const comment = await prisma.comment.update({
-  where: { id },
-  data: {
-   score: {
-    increment: 1,
-   },
-  },
- });
-
- return comment;
-*/
