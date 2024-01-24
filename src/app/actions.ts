@@ -27,3 +27,48 @@ export async function getUsers(session: Session | null) {
 
  return users;
 }
+
+export async function upVoteScore(
+ session: Session | null,
+ commentId?: number,
+ replyId?: number
+) {
+ if (!session?.user?.email) return null;
+
+ if (commentId) {
+  const comment = await prisma.comment.update({
+   where: { id: commentId },
+   data: {
+    score: {
+     increment: 1,
+    },
+   },
+  });
+  return comment;
+ }
+
+ if (replyId) {
+  const reply = await prisma.reply.update({
+   where: { id: replyId },
+   data: {
+    score: {
+     increment: 1,
+    },
+   },
+  });
+  return reply;
+ }
+}
+
+/*
+const comment = await prisma.comment.update({
+  where: { id },
+  data: {
+   score: {
+    increment: 1,
+   },
+  },
+ });
+
+ return comment;
+*/

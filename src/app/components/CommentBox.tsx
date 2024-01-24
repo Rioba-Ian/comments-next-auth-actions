@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png";
+import timeSince from "@/utils/formatdate";
 
 type UserInfo = {
  id: number | undefined;
@@ -11,6 +12,7 @@ type UserInfo = {
 type CommentBoxProps = UserInfo & {
  score: number;
  content: string;
+ modifiedAt: Date | null;
 };
 
 export default function CommentBox(props: CommentBoxProps) {
@@ -36,6 +38,9 @@ export default function CommentBox(props: CommentBoxProps) {
      </div>
 
      <p className="font-semibold">{props.name}</p>
+     <span className="text-grayish-blue">
+      {props.modifiedAt && timeSince(props.modifiedAt)}
+     </span>
     </div>
     <div>
      <p className="text-grayish-blue mt-4">{props.content}</p>

@@ -20,6 +20,11 @@ export default function Comment({ comments, users }: CommentProps) {
   "repliesComponent"
  );
 
+ console.log(
+  comments.map((comment) => comment),
+  "commentComponent"
+ );
+
  if (!comments || comments.length === 0) {
   return null;
  }
@@ -35,10 +40,11 @@ export default function Comment({ comments, users }: CommentProps) {
        id={users && users.find((user) => user.id === comment.userId)?.id}
        name={users && users.find((user) => user.id === comment.userId)?.name}
        image={users && users.find((user) => user.id === comment.userId)?.image}
+       modifiedAt={comment.updatedAt}
       />
 
       {comment.replies && comment.replies.length > 0 && (
-       <div className="replies pl-8 space-y-6 py-6">
+       <div className="replies pl-12 space-y-6 py-6">
         {comment.replies.map((reply) => (
          <CommentBox
           key={reply.id}
@@ -47,6 +53,7 @@ export default function Comment({ comments, users }: CommentProps) {
           id={users && users.find((user) => user.id === reply.userId)?.id}
           name={users && users.find((user) => user.id === reply.userId)?.name}
           image={users && users.find((user) => user.id === reply.userId)?.image}
+          modifiedAt={reply.updatedAt}
          />
         ))}
        </div>
