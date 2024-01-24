@@ -15,5 +15,5 @@ export interface Comment {
  createdAt: Date;
  updatedAt: Date;
  userId: number | null;
- replies: Comment[];
+ replies: REPLY[];
 }

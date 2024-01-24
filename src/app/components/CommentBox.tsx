@@ -3,9 +3,9 @@ import Image from "next/image";
 import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png";
 
 type UserInfo = {
- id: number;
+ id: number | undefined;
  image?: string | null | undefined;
- name: string | null;
+ name: string | null | undefined;
 };
 
 type CommentBoxProps = UserInfo & {
@@ -14,8 +14,6 @@ type CommentBoxProps = UserInfo & {
 };
 
 export default function CommentBox(props: CommentBoxProps) {
- console.log(props.image, "props.users");
-
  return (
   <div className="bg-white py-4 px-6 flex gap-6 rounded-xl">
    <div

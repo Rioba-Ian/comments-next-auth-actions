@@ -1,7 +1,13 @@
 import React from "react";
 import { Comment as CommentType } from "../lib/api";
 import CommentBox from "./CommentBox";
-import { User } from "@prisma/client";
+
+type User = {
+ id: number;
+ email: string;
+ name: string | null;
+ image: string | null;
+};
 
 type CommentProps = {
  comments: CommentType[];
@@ -9,13 +15,14 @@ type CommentProps = {
 };
 
 export default function Comment({ comments, users }: CommentProps) {
- console.log(comments, "commentsComponent");
+ console.log(
+  comments.map((comment) => comment.replies),
+  "repliesComponent"
+ );
 
  if (!comments || comments.length === 0) {
   return null;
  }
-
- console.log(users, "users");
 
  return (
   <>
@@ -31,9 +38,16 @@ export default function Comment({ comments, users }: CommentProps) {
       />
 
       {comment.replies && comment.replies.length > 0 && (
-       <div className="replies text-red-600 pl-8">
+       <div className="replies pl-8 space-y-6 py-6">
         {comment.replies.map((reply) => (
-         <Comment key={reply.id} comments={[reply]} users={users} />
+         <CommentBox
+          key={reply.id}
+          content={reply.content}
+          score={reply.score}
+          id={users && users.find((user) => user.id === reply.userId)?.id}
+          name={users && users.find((user) => user.id === reply.userId)?.name}
+          image={users && users.find((user) => user.id === reply.userId)?.image}
+         />
         ))}
        </div>
       )}

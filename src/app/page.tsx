@@ -10,11 +10,11 @@ export default async function Home() {
 
  const userData = await getUsers(session);
 
- console.log(session, "session");
+ console.log(commentsData, "commentsData");
 
  return (
   <section className="max-w-2xl mx-auto">
-   {commentsData && <Comment comments={commentsData} users={userData} />}
+   {commentsData && <Comment comments={commentsData} users={userData || []} />}
   </section>
  );
 }

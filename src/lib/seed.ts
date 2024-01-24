@@ -14,6 +14,20 @@ export default async function seedDatabase(id: number) {
   });
  }
 
+ const replies = data.comments.map((comment) => comment.replies).flat();
+
+ for (const user of replies.map((reply) => reply.user)) {
+  await prisma.user.upsert({
+   where: { email: user.email },
+   update: {},
+   create: {
+    email: user.email,
+    name: user.username,
+    image: user.image,
+   },
+  });
+ }
+
  //  seed comments and replies
  for (const comment of data.comments) {
   const createdComment = await prisma.comment.create({
