@@ -4,6 +4,7 @@ import { Session, getServerSession } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
 import { getComments } from "../actions";
+import FrontendMentorIcon from "../../../public/images/icon-frontend-mentor.svg";
 
 export default async function Navbar() {
  const session = await getServerSession(authOptions);
@@ -13,17 +14,17 @@ export default async function Navbar() {
  console.log(userData, "userData");
 
  return (
-  <div className="navbar bg-base-100">
+  <div className="navbar bg-base-200">
    <div className="flex-1">
     <Link
-     href="https://www.frontendmentor.io/challenges/interactive-comments-section-iG1RugEG9"
+     href="https://www.frontendmentor.io/profile/Rioba-Ian"
      target="_blank"
      className="btn btn-ghost text-xl"
     >
      <Image
-      src="https://www.frontendmentor.io/static/images/logo-desktop.svg"
-      height={90}
-      width={180}
+      src={FrontendMentorIcon}
+      height={32}
+      width={32}
       alt="Frontend Mentor"
      />
     </Link>
