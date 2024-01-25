@@ -30,20 +30,29 @@ export async function getUsers(session: Session | null) {
  return users;
 }
 
-type CommentOrReplyProps = {
- commentId?: number;
- replyId?: number;
+type CommentId = {
+ commentId: number;
 };
+
+type ReplyId = {
+ replyId: number;
+};
+
+type CommentOrReplyProps = CommentId | ReplyId;
 
 export async function upVoteScore(
  session: Session | null,
- { commentId, replyId }: CommentOrReplyProps
+ props: CommentOrReplyProps
 ) {
  if (!session?.user?.email) return null;
 
- if (commentId) {
+ if ("commentId" in props) {
+  const { commentId } = props;
+
+  console.log(commentId);
+
   const comment = await prisma.comment.update({
-   where: { id: commentId },
+   where: { id: Number(commentId) },
    data: {
     score: {
      increment: 1,
@@ -51,14 +60,11 @@ export async function upVoteScore(
    },
   });
 
-  console.log("comment", comment);
-  console.log("commentId", commentId);
-
   if (comment) {
    revalidatePath("/");
   }
-  return comment;
- } else if (replyId) {
+ } else if ("replyId" in props) {
+  const { replyId } = props;
   const reply = await prisma.reply.update({
    where: { id: replyId },
    data: {
@@ -67,9 +73,6 @@ export async function upVoteScore(
     },
    },
   });
-
-  console.log("reply", reply);
-  console.log("replyId", replyId);
 
   if (reply) {
    revalidatePath("/");

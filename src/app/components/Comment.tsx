@@ -29,6 +29,7 @@ export default async function Comment({ comments, users }: CommentProps) {
     <article key={comment.id} className="py-6">
      <div style={{ wordWrap: "break-word" }}>
       <CommentBox
+       key={comment.id}
        content={comment.content}
        score={comment.score}
        userid={users && users.find((user) => user.id === comment.userId)?.id}
@@ -37,6 +38,7 @@ export default async function Comment({ comments, users }: CommentProps) {
        modifiedAt={comment.updatedAt}
        id={comment.id}
        session={session}
+       isReply={false}
       />
 
       {comment.replies && comment.replies.length > 0 && (
@@ -52,6 +54,7 @@ export default async function Comment({ comments, users }: CommentProps) {
           modifiedAt={reply.updatedAt}
           id={reply.id}
           session={session}
+          isReply={true}
          />
         ))}
        </div>

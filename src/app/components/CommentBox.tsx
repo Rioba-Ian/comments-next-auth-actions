@@ -19,12 +19,17 @@ type CommentBoxProps = UserInfo & {
  content: string;
  modifiedAt: Date | null;
  session: Session | null;
+ isReply?: boolean;
 };
 
 export default function CommentBox(props: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
+
  const handleUpVote = async (id: number) => {
-  const res = await upVoteScore(props.session, { commentId: id });
+  const res = await upVoteScore(
+   props.session,
+   props.isReply ? { replyId: id } : { commentId: id }
+  );
 
   if (res) {
    console.log("upvoted");
@@ -35,7 +40,7 @@ export default function CommentBox(props: CommentBoxProps) {
   <>
    {isPending && (
     <>
-     <div className="skeleton h-4 w-28"></div>
+     <div className="skeleton h-32 w-full"></div>
     </>
    )}
    {!isPending && (
