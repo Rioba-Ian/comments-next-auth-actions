@@ -20,10 +20,7 @@ export default function RootLayout({
   <html lang="en">
    <body className={`${rubik.className} bg-very-light-gray`}>
     <SessionProvider>
-     <div
-      id="body-wrapper"
-      className="flex flex-col min-h-screen w-11/12 mx-auto"
-     >
+     <div id="body-wrapper" className="flex flex-col min-h-screen mx-auto">
       <Navbar />
       <main id="main-wrapper">{children}</main>
      </div>

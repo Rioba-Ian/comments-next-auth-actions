@@ -14,23 +14,25 @@ export default async function Navbar() {
  console.log(userData, "userData");
 
  return (
-  <div className="navbar bg-base-200">
-   <div className="flex-1">
-    <Link
-     href="https://www.frontendmentor.io/profile/Rioba-Ian"
-     target="_blank"
-     className="btn btn-ghost text-xl"
-    >
-     <Image
-      src={FrontendMentorIcon}
-      height={32}
-      width={32}
-      alt="Frontend Mentor"
-     />
-    </Link>
-   </div>
-   <div className="flex-none">
-    <UserMenuButton session={session} />
+  <div className=" bg-base-200">
+   <div className="nav-content navbar max-w-7xl mx-auto">
+    <div className="flex-1">
+     <Link
+      href="https://www.frontendmentor.io/profile/Rioba-Ian"
+      target="_blank"
+      className="btn btn-ghost text-xl"
+     >
+      <Image
+       src={FrontendMentorIcon}
+       height={32}
+       width={32}
+       alt="Frontend Mentor"
+      />
+     </Link>
+    </div>
+    <div className="flex-none">
+     <UserMenuButton session={session} />
+    </div>
    </div>
   </div>
  );

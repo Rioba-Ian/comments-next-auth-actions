@@ -2,6 +2,7 @@ import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
 import Comment from "./components/Comment";
 import { getComments, getUsers } from "./actions";
+import CommentForm from "./components/CommentForm";
 
 export default async function Home() {
  const session = await getServerSession(authOptions);
@@ -11,8 +12,9 @@ export default async function Home() {
  const userData = await getUsers(session);
 
  return (
-  <section className="max-w-2xl mx-auto">
+  <section className="max-w-2xl mx-auto my-10 py-4">
    {commentsData && <Comment comments={commentsData} users={userData || []} />}
+   <CommentForm />
   </section>
  );
 }
