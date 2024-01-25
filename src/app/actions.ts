@@ -30,6 +30,16 @@ export async function getUsers(session: Session | null) {
  return users;
 }
 
+export async function getUser(session: Session | null) {
+ if (!session?.user?.email) return null;
+
+ const user = await prisma.user.findUnique({
+  where: { email: session.user.email },
+ });
+
+ return user;
+}
+
 type CommentId = {
  commentId: number;
 };
