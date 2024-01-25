@@ -14,7 +14,7 @@ export default async function Home() {
  return (
   <section className="max-w-2xl mx-auto my-10 py-4">
    {commentsData && <Comment comments={commentsData} users={userData || []} />}
-   <CommentForm />
+   {userData && <CommentForm user={userData[0]} />}
   </section>
  );
 }

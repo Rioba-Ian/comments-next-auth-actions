@@ -9,6 +9,35 @@ const rubik = Rubik({ subsets: ["latin"] });
 export const metadata: Metadata = {
  title: "FEM + Rioba Ian",
  description: "Interactive comments section.",
+ generator: "Next.js",
+ applicationName: "Comments Agile Team Board",
+ referrer: "origin-when-cross-origin",
+ keywords: ["Next.js", "React", "JavaScript", "Server Actions"],
+ authors: [{ name: "Rioba Ian", url: "https://riobaian.dev" }],
+ creator: "Rioba Ian",
+ publisher: "Rioba Ian",
+ formatDetection: {
+  email: true,
+  address: false,
+  telephone: false,
+ },
+ openGraph: {
+  images: [
+   {
+    url: "https://res.cloudinary.com/dz209s6jk/image/upload/v1639765916/Challenges/l3cxamx1e6vpngqjtdyt.jpg", // Must be an absolute URL
+    width: 1800,
+    height: 1600,
+    alt: "Comments To your agile team discussions",
+   },
+
+   {
+    url: "https://res.cloudinary.com/dz209s6jk/image/upload/v1639766022/Challenges/fwkvt3bnvjw3hwplviwc.jpg", // Must be an absolute URL
+    width: 400,
+    height: 800,
+    alt: "Comments To your agile team discussions",
+   },
+  ],
+ },
 };
 
 export default function RootLayout({
