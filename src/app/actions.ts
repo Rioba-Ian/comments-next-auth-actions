@@ -80,3 +80,39 @@ export async function upVoteScore(
   return reply;
  }
 }
+
+export async function downVoteScore(
+ session: Session | null,
+ props: CommentOrReplyProps
+) {
+ if (!session?.user?.email) return null;
+
+ if ("commentId" in props) {
+  const { commentId } = props;
+
+  const comment = await prisma.comment.update({
+   where: { id: commentId },
+   data: {
+    score: {
+     decrement: 1,
+    },
+   },
+  });
+ } else if ("replyId" in props) {
+  const { replyId } = props;
+  const reply = await prisma.reply.update({
+   where: { id: replyId },
+   data: {
+    score: {
+     decrement: 1,
+    },
+   },
+  });
+
+  if (reply) {
+   revalidatePath("/");
+  }
+
+  return reply;
+ }
+}

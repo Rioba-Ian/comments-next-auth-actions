@@ -3,7 +3,7 @@ import React, { useTransition } from "react";
 import Image from "next/image";
 import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png";
 import timeSince from "@/utils/formatdate";
-import { upVoteScore } from "../actions";
+import { downVoteScore, upVoteScore } from "../actions";
 import { Session } from "next-auth";
 import { revalidatePath } from "next/cache";
 
@@ -36,6 +36,17 @@ export default function CommentBox(props: CommentBoxProps) {
   }
  };
 
+ const handledownVote = async (id: number) => {
+  const res = await downVoteScore(
+   props.session,
+   props.isReply ? { replyId: id } : { commentId: id }
+  );
+
+  if (res) {
+   console.log("upvoted");
+  }
+ };
+
  return (
   <>
    {isPending && (
@@ -59,7 +70,15 @@ export default function CommentBox(props: CommentBoxProps) {
        +
       </span>
       <p className="font-medium">{props.score}</p>
-      <span>-</span>
+      <span
+       onClick={() => {
+        startTransition(() => {
+         handledownVote(props.id);
+        });
+       }}
+      >
+       -
+      </span>
      </div>
      <div id="content-wrapper" className="flex flex-col justify-between">
       <div id="content" className="flex gap-3 items-center">
