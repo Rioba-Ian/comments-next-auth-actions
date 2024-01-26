@@ -74,7 +74,7 @@ export default function CommentBox(props: CommentBoxProps) {
          });
         }}
        >
-        +
+        <Image src={PlusIcon} alt="plus icon" height="10" width="10" />
        </span>
        <p className="font-medium">{props.score}</p>
        <span
@@ -84,7 +84,7 @@ export default function CommentBox(props: CommentBoxProps) {
          });
         }}
        >
-        -
+        <Image src={MinusIcon} alt="plus icon" height="10" width="10" />
        </span>
       </div>
       <div id="reply" className="sm:hidden">

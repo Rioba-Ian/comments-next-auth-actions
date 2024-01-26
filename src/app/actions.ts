@@ -124,3 +124,24 @@ export async function downVoteScore(
   return reply;
  }
 }
+
+export async function sendComment(userId: number, formData: FormData) {
+ if (!userId) {
+  throw Error("User not found");
+ }
+
+ const message = formData.get("content") as string;
+
+ if (!message) {
+  throw Error("Content is required");
+ } else {
+  await prisma.comment.create({
+   data: {
+    content: message,
+    userId: userId,
+   },
+  });
+ }
+
+ revalidatePath("/");
+}
