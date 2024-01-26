@@ -8,6 +8,7 @@ import { Session } from "next-auth";
 import ReplyIcon from "../../../public/images/icon-reply.svg";
 import PlusIcon from "../../../public/images/icon-plus.svg";
 import MinusIcon from "../../../public/images/icon-minus.svg";
+import toast, { Toaster } from "react-hot-toast";
 
 type UserInfo = {
  userid: number | undefined;
@@ -33,8 +34,8 @@ export default function CommentBox(props: CommentBoxProps) {
    props.isReply ? { replyId: id } : { commentId: id }
   );
 
-  if (res) {
-   console.log("upvoted");
+  if (res?.id) {
+   toast.success("Upvoted!");
   }
  };
 
@@ -116,6 +117,7 @@ export default function CommentBox(props: CommentBoxProps) {
      </div>
     </div>
    )}
+   <Toaster />
   </>
  );
 }

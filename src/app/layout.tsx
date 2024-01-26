@@ -38,6 +38,13 @@ export const metadata: Metadata = {
    },
   ],
  },
+ twitter: {
+  card: "summary_large_image",
+  site: "@rioba_riri",
+  title: "Agile Frontend Team",
+  description: "Comments Agile Team Board",
+  images: "./opengraph-image.png",
+ },
 };
 
 export default function RootLayout({

@@ -42,7 +42,7 @@ export default function CommentForm({ user }: CommentFormProps) {
       className="py-2 px-4 w-full rounded-lg focus-visible:border-gray-500 focus-visible:ring-gray-500"
      ></textarea>
      <div className="w-full flex flex-row items-center justify-between">
-      <div id="user-profile" className=" sm:hidden">
+      <div id="user-profile" className="sm:hidden">
        {/* user profile picture here */}
        <Image
         src={user.image ?? ""}

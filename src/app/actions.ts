@@ -4,8 +4,6 @@ import { Session } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export async function getComments(session: Session | null) {
- if (!session?.user?.email) return null;
-
  const comments = await prisma.comment.findMany({
   include: {
    replies: true,
