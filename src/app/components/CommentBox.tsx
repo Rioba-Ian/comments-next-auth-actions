@@ -5,7 +5,9 @@ import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png
 import timeSince from "@/utils/formatdate";
 import { downVoteScore, upVoteScore } from "../actions";
 import { Session } from "next-auth";
-import { revalidatePath } from "next/cache";
+import ReplyIcon from "../../../public/images/icon-reply.svg";
+import PlusIcon from "../../../public/images/icon-plus.svg";
+import MinusIcon from "../../../public/images/icon-minus.svg";
 
 type UserInfo = {
  userid: number | undefined;
@@ -55,31 +57,43 @@ export default function CommentBox(props: CommentBoxProps) {
     </>
    )}
    {!isPending && (
-    <div className="bg-white py-4 px-6 flex gap-6 rounded-xl">
+    <div className="bg-white py-4 px-6 flex flex-col-reverse sm:flex-row gap-6 rounded-xl">
      <div
-      id="score-button"
-      className="bg-very-light-gray flex flex-col justify-center items-center text-lg space-y-1"
+      id="score-reply-wrapper"
+      className="flex items-center justify-between"
      >
-      <span
-       onClick={() => {
-        startTransition(() => {
-         handleUpVote(props.id);
-        });
-       }}
+      <div
+       id="score-button"
+       className="bg-very-light-gray flex sm:flex-col gap-4 justify-center items-center text-lg space-y-1"
       >
-       +
-      </span>
-      <p className="font-medium">{props.score}</p>
-      <span
-       onClick={() => {
-        startTransition(() => {
-         handledownVote(props.id);
-        });
-       }}
-      >
-       -
-      </span>
+       <span
+        onClick={() => {
+         startTransition(() => {
+          handleUpVote(props.id);
+         });
+        }}
+       >
+        +
+       </span>
+       <p className="font-medium">{props.score}</p>
+       <span
+        onClick={() => {
+         startTransition(() => {
+          handledownVote(props.id);
+         });
+        }}
+       >
+        -
+       </span>
+      </div>
+      <div id="reply" className="sm:hidden">
+       <button className="flex items-center space-x-2 ">
+        <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
+        <span>Reply</span>
+       </button>
+      </div>
      </div>
+
      <div id="content-wrapper" className="flex flex-col justify-between">
       <div id="content" className="flex gap-3 items-center">
        <div id="profile">
