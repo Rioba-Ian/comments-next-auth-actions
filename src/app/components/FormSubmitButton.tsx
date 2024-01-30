@@ -17,7 +17,7 @@ export default function FormSubmitButton({
  return (
   <button
    {...props}
-   className={`${className} ${pending ? "bg-gray-500" : ""}`}
+   className={`${className} ${pending ? "bg-gray-500" : ""} block`}
    disabled={pending}
   >
    {pending && <span className="loading loading-spinner" />}
