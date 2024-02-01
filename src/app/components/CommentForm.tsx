@@ -3,10 +3,9 @@ import React, { useRef } from "react";
 import FormSubmitButton from "./FormSubmitButton";
 import Image from "next/image";
 import ProfilePicPlaceHolder from "@/app/assets/profile-pic-placeholder.png";
-import { sendComment } from "../actions";
-import { useFormStatus } from "react-dom";
+import { sendComment, sendReply } from "../actions";
 
-type User = {
+export type User = {
  id: number;
  name: string | null;
  image: string | null;
@@ -15,23 +14,35 @@ type User = {
 
 type CommentFormProps = {
  user: User;
+ variant: "comment" | "reply";
+ commentId?: number;
 };
 
-const initialState = {
- message: "",
-};
-
-export default function CommentForm({ user }: CommentFormProps) {
+export default function CommentForm({
+ user,
+ variant,
+ commentId,
+}: CommentFormProps) {
  const formRef = useRef<HTMLFormElement>(null);
+
+ const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.currentTarget);
+
+  if (variant === "reply" && commentId) {
+   await sendReply(user.id, formData, commentId);
+  } else {
+   await sendComment(user.id, formData);
+  }
+  formRef.current?.reset();
+ };
 
  return (
   <section className="w-full">
    <form
     ref={formRef}
-    action={async (formData: FormData) => {
-     await sendComment(user.id, formData);
-     formRef.current?.reset();
-    }}
+    onSubmit={onSubmitHandler}
     data-aftersubmit=""
     className="grid grid-col-1 grid-row-2 sm:grid-row-1 sm:grid-cols-12 -order-1"
    >
@@ -62,7 +73,6 @@ export default function CommentForm({ user }: CommentFormProps) {
      ></textarea>
      <div className="  flex flex-row items-center justify-between">
       <div id="user-profile" className="sm:hidden">
-       {/* user profile picture here */}
        <Image
         src={user.image ?? ""}
         alt={user.name || "anonymous user"}

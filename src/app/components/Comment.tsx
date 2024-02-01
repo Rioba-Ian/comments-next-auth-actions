@@ -3,6 +3,7 @@ import { Comment as CommentType } from "../lib/api";
 import CommentBox from "./CommentBox";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
+import { getUser } from "../actions";
 
 type User = {
  id: number;
@@ -23,6 +24,8 @@ export default async function Comment({ comments, users }: CommentProps) {
   return null;
  }
 
+ const user = await getUser(session);
+
  return (
   <>
    {comments.map((comment) => (
@@ -39,6 +42,7 @@ export default async function Comment({ comments, users }: CommentProps) {
        id={comment.id}
        session={session}
        isReply={false}
+       user={user}
       />
 
       {comment.replies && comment.replies.length > 0 && (
@@ -55,6 +59,7 @@ export default async function Comment({ comments, users }: CommentProps) {
           id={reply.id}
           session={session}
           isReply={true}
+          user={user}
          />
         ))}
        </div>

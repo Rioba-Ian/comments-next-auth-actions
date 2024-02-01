@@ -145,3 +145,29 @@ export async function sendComment(userId: number, formData: FormData) {
 
  revalidatePath("/");
 }
+
+export async function sendReply(
+ userId: number,
+ formData: FormData,
+ commentId: number
+) {
+ if (!userId) {
+  throw Error("User not found");
+ }
+
+ const message = formData.get("content") as string;
+
+ if (!message) {
+  throw Error("Content is required");
+ } else {
+  await prisma.reply.create({
+   data: {
+    content: message,
+    commentId: commentId,
+    userId: userId,
+   },
+  });
+ }
+
+ revalidatePath("/");
+}
