@@ -13,9 +13,7 @@ export async function getComments(session: Session | null) {
  return comments;
 }
 
-export async function getUsers(session: Session | null) {
- if (!session?.user?.email) return null;
-
+export async function getUsers() {
  const users = await prisma.user.findMany({
   select: {
    id: true,
@@ -154,6 +152,9 @@ export async function sendReply(
  if (!userId) {
   throw Error("User not found");
  }
+
+ console.log(userId, "userId from sendReply");
+ console.log(commentId, "commentId from sendReply");
 
  const message = formData.get("content") as string;
 

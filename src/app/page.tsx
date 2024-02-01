@@ -9,7 +9,7 @@ export default async function Home() {
 
  const commentsData = await getComments(session);
 
- const usersData = await getUsers(session);
+ const usersData = await getUsers();
 
  const userData = await getUser(session);
 

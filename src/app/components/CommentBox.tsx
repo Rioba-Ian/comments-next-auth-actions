@@ -109,7 +109,10 @@ export default function CommentBox(props: CommentBoxProps) {
        </div>
       </div>
 
-      <div id="content-wrapper" className="flex flex-col justify-between">
+      <div
+       id="content-wrapper"
+       className="w-full flex flex-col justify-between"
+      >
        <div
         id="reply-content-info"
         className="flex justify-between items-center"
@@ -124,7 +127,7 @@ export default function CommentBox(props: CommentBoxProps) {
           />
          </div>
 
-         <p className="font-semibold">{props.name}</p>
+         <p className="font-semibold text-xs sm:text-sm">{props.name}</p>
          <span className="text-grayish-blue">
           {props.modifiedAt && timeSince(props.modifiedAt)}
          </span>
