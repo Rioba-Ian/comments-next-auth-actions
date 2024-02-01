@@ -59,7 +59,7 @@ export default function CommentForm({
 
     <div
      id="form-box"
-     className="col-span-11 sm:flex  sm:flex-row items-start gap-4"
+     className="col-span-11 sm:flex  sm:flex-row items-start gap-4 space-y-4"
     >
      <textarea
       id="content"

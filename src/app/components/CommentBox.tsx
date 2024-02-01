@@ -101,7 +101,7 @@ export default function CommentBox(props: CommentBoxProps) {
          <Image src={MinusIcon} alt="plus icon" height="10" width="10" />
         </span>
        </div>
-       <div id="reply" className="sm:hidden">
+       <div id="reply" className="sm:hidden" onClick={() => handleReplyForm()}>
         <button className="flex items-center space-x-2 ">
          <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
          <span>Reply</span>
