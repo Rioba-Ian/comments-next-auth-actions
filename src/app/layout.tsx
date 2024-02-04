@@ -37,6 +37,13 @@ export const metadata: Metadata = {
     height: 800,
     alt: "Comments To your agile team discussions",
    },
+   //    for mobile phones
+   {
+    url: "https://res.cloudinary.com/dz209s6jk/image/upload/v1639766022/Challenges/fwkvt3bnvjw3hwplviwc.jpg", // Must be an absolute URL
+    width: 315,
+    height: 600,
+    alt: "Comments To your agile team discussions",
+   },
   ],
  },
  twitter: {
