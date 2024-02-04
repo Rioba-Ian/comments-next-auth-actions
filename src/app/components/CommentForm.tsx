@@ -4,12 +4,14 @@ import FormSubmitButton from "./FormSubmitButton";
 import Image from "next/image";
 import ProfilePicPlaceHolder from "@/app/assets/profile-pic-placeholder.png";
 import { sendComment, sendReply } from "../actions";
+import { redirect } from "next/navigation";
 
 export type User = {
  id: number;
  name: string | null;
  image: string | null;
  email: string;
+ emailVerified: Date | null;
 };
 
 type CommentFormProps = {
@@ -23,6 +25,12 @@ export default function CommentForm({
  variant,
  commentId,
 }: CommentFormProps) {
+ if (!user) {
+  console.log("user not found");
+
+  redirect("/login");
+ }
+
  const formRef = useRef<HTMLFormElement>(null);
 
  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {

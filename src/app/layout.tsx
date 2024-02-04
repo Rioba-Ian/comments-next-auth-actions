@@ -7,7 +7,7 @@ import Navbar from "./Navbar/Navbar";
 const rubik = Rubik({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
- title: "FEM + Rioba Ian",
+ title: "Frontend Mentor | Comments App",
  description: "Interactive comments section.",
  generator: "Next.js",
  applicationName: "Comments Agile Team Board",

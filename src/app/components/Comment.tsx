@@ -10,6 +10,7 @@ type User = {
  email: string;
  name: string | null;
  image: string | null;
+ emailVerified: Date | null;
 };
 
 type CommentProps = {

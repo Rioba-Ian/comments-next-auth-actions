@@ -1,7 +1,9 @@
 "use server";
 import { prisma } from "@/lib/db/prisma";
-import { Session } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
+import { Session, getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getComments(session: Session | null) {
  const comments = await prisma.comment.findMany({
@@ -20,6 +22,7 @@ export async function getUsers() {
    email: true,
    name: true,
    image: true,
+   emailVerified: true,
   },
  });
 
@@ -31,6 +34,13 @@ export async function getUser(session: Session | null) {
 
  const user = await prisma.user.findUnique({
   where: { email: session.user.email },
+  select: {
+   id: true,
+   email: true,
+   name: true,
+   image: true,
+   emailVerified: true,
+  },
  });
 
  return user;

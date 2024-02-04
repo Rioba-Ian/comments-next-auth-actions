@@ -10,6 +10,7 @@ import PlusIcon from "../../../public/images/icon-plus.svg";
 import MinusIcon from "../../../public/images/icon-minus.svg";
 import toast, { Toaster } from "react-hot-toast";
 import CommentForm, { User } from "./CommentForm";
+import { useRouter } from "next/navigation";
 
 type UserInfo = {
  userid: number | undefined;
@@ -24,12 +25,13 @@ type CommentBoxProps = UserInfo & {
  modifiedAt: Date | null;
  session: Session | null;
  isReply?: boolean;
- user: User;
+ user?: User | null;
 };
 
 export default function CommentBox(props: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
+ const router = useRouter();
 
  const handleUpVote = async (id: number) => {
   const res = await upVoteScore(
@@ -57,7 +59,8 @@ export default function CommentBox(props: CommentBoxProps) {
   console.log("return the form");
 
   if (!props.user) {
-   throw new Error("Sign in required to comment.");
+   console.log("called");
+   router.push("/api/auth/signin?callbackUrl=/");
   }
 
   setReplyFormActive((prev) => !prev);
