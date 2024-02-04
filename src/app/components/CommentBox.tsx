@@ -11,6 +11,8 @@ import MinusIcon from "../../../public/images/icon-minus.svg";
 import toast, { Toaster } from "react-hot-toast";
 import CommentForm, { User } from "./CommentForm";
 import { useRouter } from "next/navigation";
+import DeleteComment from "./DeleteComment";
+import EditComment from "./EditComment";
 
 type UserInfo = {
  userid: number | undefined;
@@ -31,7 +33,13 @@ type CommentBoxProps = UserInfo & {
 export default function CommentBox(props: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
+
  const router = useRouter();
+ let commentBelongsToUser = false;
+
+ if (props.user?.id === props.userid) {
+  commentBelongsToUser = true;
+ }
 
  const handleUpVote = async (id: number) => {
   const res = await upVoteScore(
@@ -104,11 +112,27 @@ export default function CommentBox(props: CommentBoxProps) {
          <Image src={MinusIcon} alt="plus icon" height="10" width="10" />
         </span>
        </div>
-       <div id="reply" className="sm:hidden" onClick={() => handleReplyForm()}>
-        <button className="flex items-center space-x-2 ">
-         <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
-         <span>Reply</span>
-        </button>
+       <div className="sm:hidden">
+        {props.user && commentBelongsToUser ? (
+         <div className="flex items-center gap-2">
+          <DeleteComment
+           idCommentReply={props.id}
+           variant={props.isReply ? "reply" : "comment"}
+          />
+          <EditComment />
+         </div>
+        ) : (
+         <div
+          id="reply"
+          className="sm:hidden"
+          onClick={() => handleReplyForm()}
+         >
+          <button className="flex items-center space-x-2 ">
+           <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
+           <span>Reply</span>
+          </button>
+         </div>
+        )}
        </div>
       </div>
 
@@ -136,15 +160,23 @@ export default function CommentBox(props: CommentBoxProps) {
          </span>
         </div>
 
-        <div
-         id="reply"
-         className="hidden sm:block"
-         onClick={() => handleReplyForm()}
-        >
-         <button className="flex items-center space-x-2 ">
-          <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
-          <span>Reply</span>
-         </button>
+        <div className="hidden sm:block">
+         {commentBelongsToUser ? (
+          <div className="flex items-center gap-4">
+           <DeleteComment
+            idCommentReply={props.id}
+            variant={props.isReply ? "reply" : "comment"}
+           />
+           <EditComment />
+          </div>
+         ) : (
+          <div id="reply" onClick={() => handleReplyForm()}>
+           <button className="flex items-center space-x-2 ">
+            <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
+            <span>Reply</span>
+           </button>
+          </div>
+         )}
         </div>
        </div>
 

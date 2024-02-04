@@ -65,8 +65,6 @@ export async function upVoteScore(
  if ("commentId" in props) {
   const { commentId } = props;
 
-  console.log(commentId);
-
   const comment = await prisma.comment.update({
    where: { id: Number(commentId) },
    data: {
@@ -114,6 +112,10 @@ export async function downVoteScore(
     },
    },
   });
+
+  if (comment) {
+   revalidatePath("/");
+  }
  } else if ("replyId" in props) {
   const { replyId } = props;
   const reply = await prisma.reply.update({
