@@ -11,8 +11,6 @@ interface UserMenuButtonProps {
 export default function UserMenuButton({ session }: UserMenuButtonProps) {
  const user = session?.user;
 
- console.log(user);
-
  return (
   <div className="dropdown-end dropdown">
    <label tabIndex={0} className="btn-ghost btn-circle btn">

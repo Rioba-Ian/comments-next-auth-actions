@@ -11,8 +11,6 @@ export default async function Navbar() {
 
  const userData = await getComments(session);
 
- console.log(userData, "userData");
-
  return (
   <div className=" bg-base-200">
    <div className="nav-content navbar max-w-7xl mx-auto">

@@ -8,10 +8,26 @@ type DeleteCommentButtonProps = {
 
 function DeleteComment({ variant, idCommentReply }: DeleteCommentButtonProps) {
  return (
-  <button className="flex gap-2 items-center">
-   <Image src={DeleteIcon} alt="Delete Icon" height={16} width={16} />
-   <span>Delete</span>
-  </button>
+  <>
+   <button
+    className="btn btn-ghost flex gap-2 items-center"
+    onClick={() =>
+     (document.getElementById("my_modal_2") as HTMLFormElement).showModal()
+    }
+   >
+    <Image src={DeleteIcon} alt="Delete Icon" height={16} width={16} />
+    <span>Delete</span>
+   </button>
+   <dialog id="my_modal_2" className="modal">
+    <div className="modal-box">
+     <h3 className="font-bold text-lg">Hello!</h3>
+     <p className="py-4">Press ESC key or click outside to close</p>
+    </div>
+    <form method="dialog" className="modal-backdrop">
+     <button>close</button>
+    </form>
+   </dialog>
+  </>
  );
 }
 

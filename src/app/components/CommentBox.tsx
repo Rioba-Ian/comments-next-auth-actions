@@ -13,6 +13,9 @@ import CommentForm, { User } from "./CommentForm";
 import { useRouter } from "next/navigation";
 import DeleteComment from "./DeleteComment";
 import EditComment from "./EditComment";
+import { useAtom } from "jotai";
+import { modalAtom } from "../atoms/modal.atoms";
+import DeleteModal from "./DeleteModal";
 
 type UserInfo = {
  userid: number | undefined;
@@ -33,6 +36,9 @@ type CommentBoxProps = UserInfo & {
 export default function CommentBox(props: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
+ const [showModal, setShowModal] = useAtom(modalAtom);
+
+ console.log(showModal);
 
  const router = useRouter();
  let commentBelongsToUser = false;
@@ -115,9 +121,13 @@ export default function CommentBox(props: CommentBoxProps) {
        <div className="sm:hidden">
         {props.user && commentBelongsToUser ? (
          <div className="flex items-center gap-2">
+          {/* toggle modal showing 
+            - grab id and pass it to the modal for deletion
+            */}
           <DeleteComment
            idCommentReply={props.id}
            variant={props.isReply ? "reply" : "comment"}
+           onClick={() => setShowModal((prev) => !prev)}
           />
           <EditComment />
          </div>
@@ -162,7 +172,13 @@ export default function CommentBox(props: CommentBoxProps) {
 
         <div className="hidden sm:block">
          {commentBelongsToUser ? (
-          <div className="flex items-center gap-4">
+          <div
+           className="flex items-center gap-4"
+           onClick={() => {
+            setShowModal((prev) => !prev);
+            console.log("clikced modal");
+           }}
+          >
            <DeleteComment
             idCommentReply={props.id}
             variant={props.isReply ? "reply" : "comment"}
