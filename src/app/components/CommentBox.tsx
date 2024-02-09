@@ -3,7 +3,12 @@ import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png";
 import timeSince from "@/utils/formatdate";
-import { downVoteScore, upVoteScore } from "../actions";
+import {
+ deleteComment,
+ deleteReply,
+ downVoteScore,
+ upVoteScore,
+} from "../actions";
 import { Session } from "next-auth";
 import ReplyIcon from "../../../public/images/icon-reply.svg";
 import PlusIcon from "../../../public/images/icon-plus.svg";
@@ -74,6 +79,19 @@ export default function CommentBox(props: CommentBoxProps) {
   setReplyFormActive((prev) => !prev);
  };
 
+ const handleCommentDelete = async (id: number, e: React.MouseEvent) => {
+  e.stopPropagation();
+  if (props.isReply) {
+   console.log("reply", id);
+   await deleteReply(id);
+  } else {
+   console.log("comment", id);
+   await deleteComment(id);
+  }
+ };
+
+ //  console.log(confirmDelete);
+
  return (
   <>
    {isPending && (
@@ -115,14 +133,20 @@ export default function CommentBox(props: CommentBoxProps) {
        <div className="sm:hidden">
         {props.user && commentBelongsToUser ? (
          <div className="flex items-center gap-2">
-          {/* toggle modal showing 
-            - grab id and pass it to the modal for deletion
-            */}
-          <DeleteComment
-           uniqueKey="delete-comment-sm"
-           idCommentReply={props.id}
-           variant={props.isReply ? "reply" : "comment"}
-          />
+          <div
+           key={props.id}
+           onClick={(e) => {
+            startTransition(() => {
+             handleCommentDelete(props.id, e);
+            });
+           }}
+          >
+           <DeleteComment
+            uniqueKey={`delete-sm`}
+            handleDelete={(e) => handleCommentDelete(props.id, e)}
+            key={props.id}
+           />
+          </div>
           <EditComment />
          </div>
         ) : (
@@ -167,11 +191,20 @@ export default function CommentBox(props: CommentBoxProps) {
         <div className="hidden sm:block">
          {commentBelongsToUser ? (
           <div className="flex items-center gap-4">
-           <DeleteComment
-            uniqueKey="delete-comment-lg"
-            idCommentReply={props.id}
-            variant={props.isReply ? "reply" : "comment"}
-           />
+           <div
+            key={props.id}
+            onClick={(e) => {
+             startTransition(() => {
+              handleCommentDelete(props.id, e);
+             });
+            }}
+           >
+            <DeleteComment
+             uniqueKey={`delete-lg`}
+             key={props.id}
+             handleDelete={(e) => handleCommentDelete(props.id, e)}
+            />
+           </div>
            <EditComment />
           </div>
          ) : (

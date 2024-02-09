@@ -170,17 +170,81 @@ export async function sendReply(
 
  const message = formData.get("content") as string;
 
+ const commentBelongsToId = await prisma.reply.findUnique({
+  where: {
+   id: commentId,
+  },
+  select: {
+   commentId: true,
+  },
+ });
+
+ console.log(commentBelongsToId, "commentBelongsToId");
+
  if (!message) {
   throw Error("Content is required");
  } else {
   await prisma.reply.create({
    data: {
     content: message,
-    commentId: commentId,
+    commentId: commentBelongsToId?.commentId,
     userId: userId,
    },
   });
  }
+
+ revalidatePath("/");
+}
+
+export async function deleteComment(id: number) {
+ console.log("running");
+
+ console.log(id);
+
+ const comment = await prisma.comment.findUnique({
+  where: {
+   id: id,
+  },
+ });
+
+ console.log(comment);
+
+ if (!comment) {
+  throw new Error("Comment not found.");
+ }
+
+ const res = await prisma.comment.delete({
+  where: {
+   id: id,
+  },
+  include: {
+   replies: true,
+  },
+ });
+
+ revalidatePath("/");
+}
+
+export async function deleteReply(id: number) {
+ console.log("running");
+
+ console.log(id);
+
+ const reply = await prisma.reply.findUnique({
+  where: {
+   id: id,
+  },
+ });
+
+ if (!reply) {
+  throw new Error("The reply was not found.");
+ }
+
+ const res = await prisma.reply.delete({
+  where: {
+   id: id,
+  },
+ });
 
  revalidatePath("/");
 }

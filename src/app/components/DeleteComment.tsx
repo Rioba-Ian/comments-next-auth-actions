@@ -1,30 +1,25 @@
-import Image from "next/image";
+"use client";
 import DeleteIcon from "../../../public/images/icon-delete.svg";
+import Image from "next/image";
 
-type DeleteCommentButtonProps = {
- variant: "comment" | "reply";
- idCommentReply: number;
+type DeleteCommentProps = {
  uniqueKey: string;
-} & React.ComponentProps<"button">;
 
-function DeleteComment({
- variant,
- idCommentReply,
+ handleDelete: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
+};
+
+export default function DeleteComment({
  uniqueKey,
-}: DeleteCommentButtonProps) {
- // TODO: Update the UI once the button of deleting is clicked.
- if (variant === "comment") {
-  // deal with deleting a comment
- } else {
-  // deal with deleting a reply
- }
+ handleDelete,
+}: DeleteCommentProps) {
  return (
   <>
    <button
     className="btn btn-ghost flex gap-2 items-center"
-    onClick={() =>
-     (document.getElementById(`${uniqueKey}`) as HTMLFormElement).showModal()
-    }
+    onClick={(e) => {
+     (document.getElementById(`${uniqueKey}`) as HTMLFormElement).showModal();
+     e.stopPropagation();
+    }}
    >
     <Image src={DeleteIcon} alt="Delete Icon" height={16} width={16} />
     <span>Delete</span>
@@ -47,9 +42,11 @@ function DeleteComment({
       </button>
       <button
        className="btn bg-soft-red text-white uppercase"
-       onClick={() =>
-        (document.getElementById(`${uniqueKey}`) as HTMLFormElement).close()
-       }
+       onClick={async (e) => {
+        await handleDelete(e);
+        (document.getElementById(`${uniqueKey}`) as HTMLFormElement).close();
+        e.stopPropagation();
+       }}
       >
        Delete
       </button>
@@ -62,5 +59,3 @@ function DeleteComment({
   </>
  );
 }
-
-export default DeleteComment;
