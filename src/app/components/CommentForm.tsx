@@ -1,10 +1,11 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useTransition } from "react";
 import FormSubmitButton from "./FormSubmitButton";
 import Image from "next/image";
 import ProfilePicPlaceHolder from "@/app/assets/profile-pic-placeholder.png";
 import { sendComment, sendReply } from "../actions";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export type User = {
  id: number;
@@ -18,12 +19,14 @@ type CommentFormProps = {
  user: User;
  variant: "comment" | "reply";
  commentId?: number;
+ setReplyForm?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function CommentForm({
  user,
  variant,
  commentId,
+ setReplyForm,
 }: CommentFormProps) {
  if (!user) {
   console.log("user not found");
@@ -32,19 +35,45 @@ export default function CommentForm({
  }
 
  const formRef = useRef<HTMLFormElement>(null);
+ const [isPending, startTransition] = useTransition();
 
  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
+  e.stopPropagation();
 
   const formData = new FormData(e.currentTarget);
 
-  if (variant === "reply" && commentId) {
-   await sendReply(user.id, formData, commentId);
-  } else {
-   await sendComment(user.id, formData);
-  }
-  formRef.current?.reset();
+  startTransition(() => {
+   if (variant === "reply" && commentId) {
+    console.log(commentId);
+
+    sendReply(user.id, formData, commentId)
+     .then(() => {
+      formRef.current?.reset();
+      revalidatePath("/");
+      if (setReplyForm) {
+       setReplyForm(false);
+      }
+     })
+     .catch((err) => {
+      console.error(err);
+     });
+   } else {
+    sendComment(user.id, formData)
+     .then(() => {
+      formRef.current?.reset();
+      revalidatePath("/");
+     })
+     .catch((err) => {
+      console.error(err);
+     });
+   }
+  });
  };
+
+ if (isPending) {
+  return <div className="skeleton h-32 w-full"></div>;
+ }
 
  return (
   <section className="w-full">

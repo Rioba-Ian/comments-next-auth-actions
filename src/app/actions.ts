@@ -165,21 +165,13 @@ export async function sendReply(
   throw Error("User not found");
  }
 
- console.log(userId, "userId from sendReply");
- console.log(commentId, "commentId from sendReply");
-
  const message = formData.get("content") as string;
 
- const commentBelongsToId = await prisma.reply.findUnique({
+ const commentBelongsToId = await prisma.comment.findUnique({
   where: {
    id: commentId,
   },
-  select: {
-   commentId: true,
-  },
  });
-
- console.log(commentBelongsToId, "commentBelongsToId");
 
  if (!message) {
   throw Error("Content is required");
@@ -187,7 +179,7 @@ export async function sendReply(
   await prisma.reply.create({
    data: {
     content: message,
-    commentId: commentBelongsToId?.commentId,
+    commentId: commentBelongsToId?.id,
     userId: userId,
    },
   });

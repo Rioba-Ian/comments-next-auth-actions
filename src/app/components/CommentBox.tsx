@@ -71,6 +71,7 @@ export default function CommentBox(props: CommentBoxProps) {
 
  const handleReplyForm = () => {
   console.log("return the form");
+  console.log(props.id);
 
   if (!props.user) {
    console.log("called");
@@ -84,14 +85,12 @@ export default function CommentBox(props: CommentBoxProps) {
   e.stopPropagation();
   if (props.isReply) {
    console.log("reply", id);
-   await deleteReply(id);
+   //    await deleteReply(id);
   } else {
    console.log("comment", id);
-   await deleteComment(id);
+   //    await deleteComment(id);
   }
  };
-
- //  console.log(confirmDelete);
 
  return (
   <>
@@ -230,7 +229,12 @@ export default function CommentBox(props: CommentBoxProps) {
      </div>
 
      {replyFormActive && props.user && (
-      <CommentForm user={props.user} variant="reply" commentId={props.id} />
+      <CommentForm
+       user={props.user}
+       variant="reply"
+       commentId={props.id}
+       setReplyForm={setReplyFormActive}
+      />
      )}
     </div>
    )}
