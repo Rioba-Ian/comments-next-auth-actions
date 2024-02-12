@@ -4,25 +4,36 @@ import Image from "next/image";
 
 type DeleteCommentProps = {
  uniqueKey: string;
-
+ confirmDelete?: boolean;
+ setConfirmDelete: React.Dispatch<React.SetStateAction<boolean>>;
  handleDelete: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
 };
 
 export default function DeleteComment({
  uniqueKey,
  handleDelete,
+ confirmDelete,
+ setConfirmDelete,
 }: DeleteCommentProps) {
  return (
   <>
    <button
+    disabled={confirmDelete}
     className="btn btn-ghost flex gap-2 items-center"
     onClick={(e) => {
+     setConfirmDelete(false);
      (document.getElementById(`${uniqueKey}`) as HTMLFormElement).showModal();
      e.stopPropagation();
     }}
    >
-    <Image src={DeleteIcon} alt="Delete Icon" height={16} width={16} />
-    <span>Delete</span>
+    {confirmDelete ? (
+     <span className="loading loading-spinner loading-sm"></span>
+    ) : (
+     <>
+      <Image src={DeleteIcon} alt="Delete Icon" height={16} width={16} />
+      <span>Delete</span>
+     </>
+    )}
    </button>
    <dialog id={`${uniqueKey}`} className="modal">
     <div className="modal-box">
@@ -43,6 +54,7 @@ export default function DeleteComment({
       <button
        className="btn bg-soft-red text-white uppercase"
        onClick={async (e) => {
+        setConfirmDelete(true);
         await handleDelete(e);
         (document.getElementById(`${uniqueKey}`) as HTMLFormElement).close();
         e.stopPropagation();

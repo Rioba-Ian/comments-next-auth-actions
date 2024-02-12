@@ -38,6 +38,7 @@ type CommentBoxProps = UserInfo & {
 export default function CommentBox(props: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
+ const [confirmDelete, setConfirmDelete] = useState(false);
 
  const router = useRouter();
  let commentBelongsToUser = false;
@@ -142,6 +143,8 @@ export default function CommentBox(props: CommentBoxProps) {
            }}
           >
            <DeleteComment
+            confirmDelete={confirmDelete}
+            setConfirmDelete={setConfirmDelete}
             uniqueKey={`delete-sm`}
             handleDelete={(e) => handleCommentDelete(props.id, e)}
             key={props.id}
@@ -200,7 +203,9 @@ export default function CommentBox(props: CommentBoxProps) {
             }}
            >
             <DeleteComment
+             confirmDelete={confirmDelete}
              uniqueKey={`delete-lg`}
+             setConfirmDelete={setConfirmDelete}
              key={props.id}
              handleDelete={(e) => handleCommentDelete(props.id, e)}
             />
