@@ -270,9 +270,12 @@ export default function CommentBox({
         </div>
        </div>
 
-       <div id="content-update" className="flex flex-col justify-center">
+       <div
+        id="content-update"
+        className="flex flex-col justify-center mt-2"
+        key={props.id}
+       >
         <div
-         key={props.id}
          contentEditable={enableContentEdit}
          suppressContentEditableWarning={true}
          onInput={handleInputChange}
@@ -284,7 +287,6 @@ export default function CommentBox({
          <p className="text-grayish-blue mt-4 p-2 px-4">{props.content}</p>
         </div>
         <span
-         key={props.id}
          onClick={() => setEnableContentEdit(false)}
          className={`${
           enableContentEdit ? "block" : "hidden"
