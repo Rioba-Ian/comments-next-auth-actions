@@ -5,7 +5,6 @@ import { Adapter } from "next-auth/adapters";
 import { prisma } from "@/lib/db/prisma";
 import { env } from "@/lib/env";
 import seedDatabase from "@/lib/seed";
-import { getComments } from "@/app/actions";
 
 export const authOptions: NextAuthOptions = {
  adapter: PrismaAdapter(prisma) as Adapter,

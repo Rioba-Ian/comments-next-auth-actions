@@ -270,17 +270,28 @@ export default function CommentBox({
         </div>
        </div>
 
-       <div
-        key={props.id}
-        contentEditable={enableContentEdit}
-        suppressContentEditableWarning={true}
-        onInput={handleInputChange}
-        onBlur={(e) => handleOnBlur(e)}
-        className={`${
-         enableContentEdit ? "border-2 border-grayish-blue rounded-md" : ""
-        }`}
-       >
-        <p className="text-grayish-blue mt-4 p-2 px-4">{props.content}</p>
+       <div id="content-update" className="flex flex-col justify-center">
+        <div
+         key={props.id}
+         contentEditable={enableContentEdit}
+         suppressContentEditableWarning={true}
+         onInput={handleInputChange}
+         onBlur={(e) => handleOnBlur(e)}
+         className={`${
+          enableContentEdit ? "border-2 border-grayish-blue rounded-md" : ""
+         }`}
+        >
+         <p className="text-grayish-blue mt-4 p-2 px-4">{props.content}</p>
+        </div>
+        <span
+         key={props.id}
+         onClick={() => setEnableContentEdit(false)}
+         className={`${
+          enableContentEdit ? "block" : "hidden"
+         } bg-moderate-blue text-white uppercase ml-auto px-3 text-sm py-1 rounded-md mt-2 cursor-pointer`}
+        >
+         Update
+        </span>
        </div>
       </div>
      </div>
