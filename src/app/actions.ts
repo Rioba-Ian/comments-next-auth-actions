@@ -56,10 +56,8 @@ type ReplyId = {
 
 type CommentOrReplyProps = CommentId | ReplyId;
 
-export async function upVoteScore(
- session: Session | null,
- props: CommentOrReplyProps
-) {
+export async function upVoteScore(props: CommentOrReplyProps) {
+ const session = await getServerSession(authOptions);
  if (!session?.user?.email) return null;
 
  if ("commentId" in props) {
@@ -95,10 +93,9 @@ export async function upVoteScore(
  }
 }
 
-export async function downVoteScore(
- session: Session | null,
- props: CommentOrReplyProps
-) {
+export async function downVoteScore(props: CommentOrReplyProps) {
+ const session = await getServerSession(authOptions);
+
  if (!session?.user?.email) return null;
 
  if ("commentId" in props) {

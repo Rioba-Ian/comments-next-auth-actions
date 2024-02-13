@@ -9,7 +9,6 @@ import {
  downVoteScore,
  upVoteScore,
 } from "../actions";
-import { Session } from "next-auth";
 import ReplyIcon from "../../../public/images/icon-reply.svg";
 import PlusIcon from "../../../public/images/icon-plus.svg";
 import MinusIcon from "../../../public/images/icon-minus.svg";
@@ -30,22 +29,29 @@ type CommentBoxProps = UserInfo & {
  score: number;
  content: string;
  modifiedAt: Date | null;
- session: Session | null;
  isReply?: boolean;
  user?: User | null;
+ onDelete: (
+  id: number,
+  e: React.MouseEvent,
+  isReply?: boolean
+ ) => Promise<void>;
 };
 
-export default function CommentBox(props: CommentBoxProps) {
+export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
- const [confirmDelete, setConfirmDelete] = useState(false);
+ //  const [confirmDelete, setConfirmDelete] = useState(false);
 
  // define state to grab comment/replyid when someone clicks on the reply button
  // in between the reply or the comment
  const [replyId, setReplyId] = useState<number | null>(null);
  const [commentId, setCommentId] = useState<number | null>(null);
 
- //TODO: reset and remove the reply form once it has been used
+ // TODO: Give correct id to delete component
+ const [commentReplyIdToDelete, setCommentReplyIdToDelete] = useState<
+  number | null
+ >(null);
 
  const router = useRouter();
  let commentBelongsToUser = false;
@@ -56,7 +62,6 @@ export default function CommentBox(props: CommentBoxProps) {
 
  const handleUpVote = async (id: number) => {
   const res = await upVoteScore(
-   props.session,
    props.isReply ? { replyId: id } : { commentId: id }
   );
 
@@ -67,7 +72,6 @@ export default function CommentBox(props: CommentBoxProps) {
 
  const handledownVote = async (id: number) => {
   const res = await downVoteScore(
-   props.session,
    props.isReply ? { replyId: id } : { commentId: id }
   );
 
@@ -77,29 +81,27 @@ export default function CommentBox(props: CommentBoxProps) {
  };
 
  const handleReplyForm = (e: React.MouseEvent<HTMLDivElement>) => {
-  console.log("return the form");
-  console.log(props.id);
-
   setReplyId(props.isReply ? props.id : null);
   setCommentId(props.isReply ? null : props.id);
 
   if (!props.user) {
-   console.log("called");
    router.push("/api/auth/signin?callbackUrl=/");
   }
 
   setReplyFormActive((prev) => !prev);
  };
 
- console.log(replyFormActive);
-
  const handleCommentDelete = async (id: number, e: React.MouseEvent) => {
   e.stopPropagation();
   if (props.isReply) {
    console.log("reply", id);
+   setCommentReplyIdToDelete(id);
+
    //    await deleteReply(id);
   } else {
    console.log("comment", id);
+   setCommentReplyIdToDelete(id);
+
    //    await deleteComment(id);
   }
  };
@@ -112,7 +114,7 @@ export default function CommentBox(props: CommentBoxProps) {
     </>
    )}
    {!isPending && (
-    <div className="space-y-4">
+    <div className="space-y-4" key={props.id}>
      <div className="bg-white py-4 px-6 flex flex-col-reverse sm:flex-row gap-6 rounded-xl">
       <div
        id="score-reply-wrapper"
@@ -155,11 +157,8 @@ export default function CommentBox(props: CommentBoxProps) {
            }}
           >
            <DeleteComment
-            confirmDelete={confirmDelete}
-            setConfirmDelete={setConfirmDelete}
-            uniqueKey={`delete-sm`}
-            handleDelete={(e) => handleCommentDelete(props.id, e)}
-            key={props.id}
+            uniqueKey={`delete-sm-${props.id}`}
+            handleDelete={(e) => onDelete(props.id, e, props.isReply)}
            />
           </div>
           <EditComment />
@@ -210,18 +209,14 @@ export default function CommentBox(props: CommentBoxProps) {
             key={props.id}
             onClick={(e) => {
              console.log("clicked.");
-
              startTransition(() => {
               handleCommentDelete(props.id, e);
              });
             }}
            >
             <DeleteComment
-             confirmDelete={confirmDelete}
-             uniqueKey={`delete-lg`}
-             setConfirmDelete={setConfirmDelete}
-             key={props.id}
-             handleDelete={(e) => handleCommentDelete(props.id, e)}
+             uniqueKey={`delete-lg-${props.id}`}
+             handleDelete={(e) => onDelete(props.id, e, props.isReply)}
             />
            </div>
            <EditComment />

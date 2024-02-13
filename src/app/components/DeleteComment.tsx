@@ -1,20 +1,18 @@
 "use client";
+import { useState } from "react";
 import DeleteIcon from "../../../public/images/icon-delete.svg";
 import Image from "next/image";
 
 type DeleteCommentProps = {
  uniqueKey: string;
- confirmDelete?: boolean;
- setConfirmDelete: React.Dispatch<React.SetStateAction<boolean>>;
  handleDelete: (e: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
 };
 
 export default function DeleteComment({
  uniqueKey,
  handleDelete,
- confirmDelete,
- setConfirmDelete,
 }: DeleteCommentProps) {
+ const [confirmDelete, setConfirmDelete] = useState(false);
  return (
   <>
    <button
@@ -60,7 +58,11 @@ export default function DeleteComment({
         e.stopPropagation();
        }}
       >
-       Delete
+       {confirmDelete ? (
+        <span className="loading loading-spinner loading-sm"></span>
+       ) : (
+        "Delete"
+       )}
       </button>
      </div>
     </div>

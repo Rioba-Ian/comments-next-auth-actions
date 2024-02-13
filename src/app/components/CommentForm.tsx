@@ -44,8 +44,6 @@ export default function CommentForm({
 
   startTransition(() => {
    if (variant === "reply" && commentId) {
-    console.log(commentId);
-
     sendReply(user.id, formData, commentId)
      .then(() => {
       formRef.current?.reset();

@@ -1,9 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { Comment as CommentType } from "../lib/api";
 import CommentBox from "./CommentBox";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
-import { getUser } from "../actions";
+import { deleteComment, deleteReply } from "../actions";
 
 type User = {
  id: number;
@@ -16,16 +17,29 @@ type User = {
 type CommentProps = {
  comments: CommentType[];
  users: User[];
+ userData: User | null;
 };
 
-export default async function Comment({ comments, users }: CommentProps) {
- const session = await getServerSession(authOptions);
-
+export default function Comment({ comments, users, userData }: CommentProps) {
  if (!comments || comments.length === 0) {
   return null;
  }
 
- const user = await getUser(session);
+ const handleCommentDelete = async (
+  id: number,
+  e: React.MouseEvent,
+  isReply?: boolean
+ ) => {
+  e.stopPropagation();
+
+  if (isReply) {
+   await deleteReply(id);
+  } else {
+   await deleteComment(id);
+  }
+ };
+
+ const user = userData;
 
  return (
   <>
@@ -41,9 +55,9 @@ export default async function Comment({ comments, users }: CommentProps) {
        image={users && users.find((user) => user.id === comment.userId)?.image}
        modifiedAt={comment.updatedAt}
        id={comment.id}
-       session={session}
        isReply={false}
        user={user}
+       onDelete={handleCommentDelete}
       />
 
       {comment.replies && comment.replies.length > 0 && (
@@ -58,9 +72,9 @@ export default async function Comment({ comments, users }: CommentProps) {
           image={users && users.find((user) => user.id === reply.userId)?.image}
           modifiedAt={reply.updatedAt}
           id={reply.id}
-          session={session}
           isReply={true}
           user={user}
+          onDelete={handleCommentDelete}
          />
         ))}
        </div>
