@@ -167,19 +167,43 @@ export async function sendReply(
 
  const message = formData.get("content") as string;
 
+ if (!message) {
+  throw Error("Message content is required.");
+ }
+
+ // handle reply of a comment first
  const commentBelongsToId = await prisma.comment.findUnique({
   where: {
    id: commentId,
   },
  });
 
- if (!message) {
-  throw Error("Content is required");
- } else {
+ console.log(commentBelongsToId);
+
+ if (commentBelongsToId) {
   await prisma.reply.create({
    data: {
     content: message,
-    commentId: commentBelongsToId?.id,
+    commentId: commentBelongsToId.id,
+    userId: userId,
+   },
+  });
+ }
+
+ // handle reply of a reply
+ const replyOfReplyBelongsToComment = await prisma.reply.findUnique({
+  where: {
+   id: commentId,
+  },
+ });
+
+ console.log(replyOfReplyBelongsToComment);
+
+ if (replyOfReplyBelongsToComment) {
+  await prisma.reply.create({
+   data: {
+    content: message,
+    commentId: replyOfReplyBelongsToComment.commentId,
     userId: userId,
    },
   });

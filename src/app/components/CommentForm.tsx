@@ -18,16 +18,15 @@ export type User = {
 type CommentFormProps = {
  user: User;
  variant: "comment" | "reply";
- commentId?: number;
- setReplyForm?: React.Dispatch<React.SetStateAction<boolean>>;
+ commentId?: number | null;
 };
 
 export default function CommentForm({
  user,
  variant,
  commentId,
- setReplyForm,
-}: CommentFormProps) {
+ onSubmitSuccess,
+}: CommentFormProps & { onSubmitSuccess?: () => void }) {
  if (!user) {
   console.log("user not found");
 
@@ -51,8 +50,8 @@ export default function CommentForm({
      .then(() => {
       formRef.current?.reset();
       revalidatePath("/");
-      if (setReplyForm) {
-       setReplyForm(false);
+      if (onSubmitSuccess) {
+       onSubmitSuccess();
       }
      })
      .catch((err) => {

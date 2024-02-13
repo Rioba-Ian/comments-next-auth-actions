@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
 import PlaceHolderImage from "../../../public/images/avatars/image-maxblagun.png";
 import timeSince from "@/utils/formatdate";
@@ -40,6 +40,13 @@ export default function CommentBox(props: CommentBoxProps) {
  const [replyFormActive, setReplyFormActive] = useState(false);
  const [confirmDelete, setConfirmDelete] = useState(false);
 
+ // define state to grab comment/replyid when someone clicks on the reply button
+ // in between the reply or the comment
+ const [replyId, setReplyId] = useState<number | null>(null);
+ const [commentId, setCommentId] = useState<number | null>(null);
+
+ //TODO: reset and remove the reply form once it has been used
+
  const router = useRouter();
  let commentBelongsToUser = false;
 
@@ -69,9 +76,12 @@ export default function CommentBox(props: CommentBoxProps) {
   }
  };
 
- const handleReplyForm = () => {
+ const handleReplyForm = (e: React.MouseEvent<HTMLDivElement>) => {
   console.log("return the form");
   console.log(props.id);
+
+  setReplyId(props.isReply ? props.id : null);
+  setCommentId(props.isReply ? null : props.id);
 
   if (!props.user) {
    console.log("called");
@@ -80,6 +90,8 @@ export default function CommentBox(props: CommentBoxProps) {
 
   setReplyFormActive((prev) => !prev);
  };
+
+ console.log(replyFormActive);
 
  const handleCommentDelete = async (id: number, e: React.MouseEvent) => {
   e.stopPropagation();
@@ -136,6 +148,7 @@ export default function CommentBox(props: CommentBoxProps) {
           <div
            key={props.id}
            onClick={(e) => {
+            setCommentId(props.isReply ? null : props.id);
             startTransition(() => {
              handleCommentDelete(props.id, e);
             });
@@ -155,7 +168,7 @@ export default function CommentBox(props: CommentBoxProps) {
          <div
           id="reply"
           className="sm:hidden"
-          onClick={() => handleReplyForm()}
+          onClick={(e) => handleReplyForm(e)}
          >
           <button className="flex items-center space-x-2 ">
            <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
@@ -196,6 +209,8 @@ export default function CommentBox(props: CommentBoxProps) {
            <div
             key={props.id}
             onClick={(e) => {
+             console.log("clicked.");
+
              startTransition(() => {
               handleCommentDelete(props.id, e);
              });
@@ -212,7 +227,7 @@ export default function CommentBox(props: CommentBoxProps) {
            <EditComment />
           </div>
          ) : (
-          <div id="reply" onClick={() => handleReplyForm()}>
+          <div id="reply" onClick={(e) => handleReplyForm(e)}>
            <button className="flex items-center space-x-2 ">
             <Image height={16} width={16} alt="reply button" src={ReplyIcon} />
             <span>Reply</span>
@@ -230,10 +245,11 @@ export default function CommentBox(props: CommentBoxProps) {
 
      {replyFormActive && props.user && (
       <CommentForm
+       key={replyFormActive ? "active" : "inactive"}
        user={props.user}
        variant="reply"
-       commentId={props.id}
-       setReplyForm={setReplyFormActive}
+       commentId={replyId || commentId}
+       onSubmitSuccess={() => setReplyFormActive(false)}
       />
      )}
     </div>
