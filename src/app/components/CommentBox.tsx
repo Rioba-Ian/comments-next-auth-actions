@@ -36,9 +36,19 @@ type CommentBoxProps = UserInfo & {
   e: React.MouseEvent,
   isReply?: boolean
  ) => Promise<void>;
+ onEdit: (
+  id: number,
+  e: React.FocusEvent,
+  content: string,
+  isReply?: boolean
+ ) => Promise<void>;
 };
 
-export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
+export default function CommentBox({
+ onDelete,
+ onEdit,
+ ...props
+}: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
  //  const [confirmDelete, setConfirmDelete] = useState(false);
@@ -48,10 +58,9 @@ export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
  const [replyId, setReplyId] = useState<number | null>(null);
  const [commentId, setCommentId] = useState<number | null>(null);
 
- // TODO: Give correct id to delete component
- const [commentReplyIdToDelete, setCommentReplyIdToDelete] = useState<
-  number | null
- >(null);
+ // todo: content editable for comment showing
+ const [enableContentEdit, setEnableContentEdit] = useState<boolean>(false);
+ const [editedContent, setEditedContent] = useState<string>(props.content);
 
  const router = useRouter();
  let commentBelongsToUser = false;
@@ -95,16 +104,37 @@ export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
   e.stopPropagation();
   if (props.isReply) {
    console.log("reply", id);
-   setCommentReplyIdToDelete(id);
 
    //    await deleteReply(id);
   } else {
    console.log("comment", id);
-   setCommentReplyIdToDelete(id);
 
    //    await deleteComment(id);
   }
  };
+
+ const handleEditComment = (e: React.MouseEvent) => {
+  console.log("clicked.");
+
+  setEnableContentEdit((prev) => !prev);
+ };
+
+ const handleOnBlur = (e: React.FocusEvent) => {
+  setEnableContentEdit(false);
+
+  if (props.content !== editedContent) {
+   console.log("content has changed");
+
+   console.log(editedContent);
+
+   onEdit(props.id, e, editedContent, props.isReply);
+  }
+ };
+
+ const handleInputChange = (e: React.FormEvent<HTMLDivElement>) => {
+  setEditedContent(e.currentTarget.textContent || "");
+ };
+ console.log(enableContentEdit, "enableCOntent editable");
 
  return (
   <>
@@ -161,7 +191,11 @@ export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
             handleDelete={(e) => onDelete(props.id, e, props.isReply)}
            />
           </div>
-          <EditComment />
+          <EditComment
+           onClick={(e) => {
+            handleEditComment(e);
+           }}
+          />
          </div>
         ) : (
          <div
@@ -219,7 +253,11 @@ export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
              handleDelete={(e) => onDelete(props.id, e, props.isReply)}
             />
            </div>
-           <EditComment />
+           <EditComment
+            onClick={(e) => {
+             handleEditComment(e);
+            }}
+           />
           </div>
          ) : (
           <div id="reply" onClick={(e) => handleReplyForm(e)}>
@@ -232,8 +270,17 @@ export default function CommentBox({ onDelete, ...props }: CommentBoxProps) {
         </div>
        </div>
 
-       <div>
-        <p className="text-grayish-blue mt-4">{props.content}</p>
+       <div
+        key={props.id}
+        contentEditable={enableContentEdit}
+        suppressContentEditableWarning={true}
+        onInput={handleInputChange}
+        onBlur={(e) => handleOnBlur(e)}
+        className={`${
+         enableContentEdit ? "border-2 border-grayish-blue rounded-md" : ""
+        }`}
+       >
+        <p className="text-grayish-blue mt-4 p-2 px-4">{props.content}</p>
        </div>
       </div>
      </div>

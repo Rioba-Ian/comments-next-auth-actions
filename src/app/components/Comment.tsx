@@ -39,6 +39,17 @@ export default function Comment({ comments, users, userData }: CommentProps) {
   }
  };
 
+ const handleEditComment = async (
+  id: number,
+  e: React.FocusEvent,
+  content: string,
+  isReply?: boolean
+ ) => {
+  console.log(content);
+
+  console.log(id);
+ };
+
  const user = userData;
 
  return (
@@ -58,6 +69,7 @@ export default function Comment({ comments, users, userData }: CommentProps) {
        isReply={false}
        user={user}
        onDelete={handleCommentDelete}
+       onEdit={handleEditComment}
       />
 
       {comment.replies && comment.replies.length > 0 && (
@@ -75,6 +87,7 @@ export default function Comment({ comments, users, userData }: CommentProps) {
           isReply={true}
           user={user}
           onDelete={handleCommentDelete}
+          onEdit={handleEditComment}
          />
         ))}
        </div>
