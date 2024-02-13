@@ -45,10 +45,6 @@ export default function Comment({ comments, users, userData }: CommentProps) {
   content: string,
   isReply?: boolean
  ) => {
-  console.log(content);
-
-  console.log(id);
-
   if (isReply) {
    // edit reply
   } else {

@@ -51,6 +51,7 @@ export default function CommentBox({
 }: CommentBoxProps) {
  const [isPending, startTransition] = useTransition();
  const [replyFormActive, setReplyFormActive] = useState(false);
+ const [resetKey, setResetKey] = useState(0);
  //  const [confirmDelete, setConfirmDelete] = useState(false);
 
  // define state to grab comment/replyid when someone clicks on the reply button
@@ -97,7 +98,7 @@ export default function CommentBox({
    router.push("/api/auth/signin?callbackUrl=/");
   }
 
-  setReplyFormActive((prev) => !prev);
+  setReplyFormActive(true);
  };
 
  const handleCommentDelete = async (id: number, e: React.MouseEvent) => {
@@ -114,8 +115,6 @@ export default function CommentBox({
  };
 
  const handleEditComment = (e: React.MouseEvent) => {
-  console.log("clicked.");
-
   setEnableContentEdit((prev) => !prev);
  };
 
@@ -123,10 +122,6 @@ export default function CommentBox({
   setEnableContentEdit(false);
 
   if (props.content !== editedContent) {
-   console.log("content has changed");
-
-   console.log(editedContent);
-
    onEdit(props.id, e, editedContent, props.isReply);
   }
  };
@@ -134,7 +129,10 @@ export default function CommentBox({
  const handleInputChange = (e: React.FormEvent<HTMLDivElement>) => {
   setEditedContent(e.currentTarget.textContent || "");
  };
- console.log(enableContentEdit, "enableCOntent editable");
+
+ const handleOnSubmitSuccess = () => {
+  setReplyFormActive(false);
+ };
 
  return (
   <>
@@ -300,11 +298,10 @@ export default function CommentBox({
 
      {replyFormActive && props.user && (
       <CommentForm
-       key={replyFormActive ? "active" : "inactive"}
        user={props.user}
        variant="reply"
        commentId={replyId || commentId}
-       onSubmitSuccess={() => setReplyFormActive(false)}
+       onSubmitSuccess={handleOnSubmitSuccess}
       />
      )}
     </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useTransition } from "react";
+import React, { useEffect, useRef, useTransition } from "react";
 import FormSubmitButton from "./FormSubmitButton";
 import Image from "next/image";
 import ProfilePicPlaceHolder from "@/app/assets/profile-pic-placeholder.png";
@@ -19,6 +19,7 @@ type CommentFormProps = {
  user: User;
  variant: "comment" | "reply";
  commentId?: number | null;
+ onSubmitSuccess?: () => void;
 };
 
 export default function CommentForm({
@@ -26,7 +27,7 @@ export default function CommentForm({
  variant,
  commentId,
  onSubmitSuccess,
-}: CommentFormProps & { onSubmitSuccess?: () => void }) {
+}: CommentFormProps) {
  if (!user) {
   console.log("user not found");
 
